@@ -24,6 +24,7 @@ executable word-counter
                        , split
                        , scotty
                        , aeson
+                       , containers
 
   ghc-options:         -Wall
                        -Wcompat
@@ -34,13 +35,4 @@ executable word-counter
                        -Wmissing-home-modules
                        -Wpartial-fields
                        -Wredundant-constraints
-ghc-options:         -Wall
-                       -Wcompat
-                       -Widentities
-                       -Wincomplete-record-updates
-                       -Wincomplete-uni-patterns
-                       -Wmissing-export-lists
-                       -Wmissing-home-modules
-                       -Wpartial-fields
-                       -Wredundant-constraints
-                       -Werrorstack-root: "D:/stack"  # Ganti dengan path yang sesuai
+
