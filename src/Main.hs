@@ -4,6 +4,8 @@ import Web.Scotty
 import qualified Data.Text as T
 import Data.Aeson (FromJSON, object, (.=), withObject)
 import Data.Aeson.Types (parseJSON, (.:))
+import Data.List (group, sort)
+import qualified Data.Map as M
 
 -- Tipe data JSON sederhana
 newtype InputText = InputText { input :: T.Text }
@@ -24,6 +26,13 @@ hitungKalimat teks = length . filter (not . T.null) $ T.splitOn "." teks
 hitungKarakter :: T.Text -> Int
 hitungKarakter teks = T.length teks
 
+-- Fungsi untuk menghitung frekuensi kata
+hitungFrekuensi :: T.Text -> [(T.Text, Int)]
+hitungFrekuensi teks = 
+    let wordsList = T.words teks
+        countMap = M.fromListWith (+) [(word, 1) | word <- wordsList]
+    in M.toList countMap
+
 main :: IO ()
 main = scotty 3000 $ do
     post "/hitung-kata" $ do
@@ -42,4 +51,11 @@ main = scotty 3000 $ do
         inputData <- jsonData :: ActionM InputText
         let teks = input inputData
         let result = hitungKarakter teks
+        json $ object ["result" .= result]
+
+    -- Menambahkan endpoint untuk menghitung frekuensi kata
+    post "/hitung-frekuensi" $ do
+        inputData <- jsonData :: ActionM InputText
+        let teks = input inputData
+        let result = hitungFrekuensi teks
         json $ object ["result" .= result]
