@@ -33,6 +33,17 @@ hitungFrekuensi teks =
         countMap = M.fromListWith (+) [(word, 1) | word <- wordsList]
     in M.toList countMap
 
+-- Fungsi untuk menghitung huruf kecil
+hitungHurufKecil :: T.Text -> Int
+hitungHurufKecil teks = length . filter (`elem` ['a'..'z']) $ T.unpack teks
+
+-- Fungsi untuk menghitung huruf besar
+hitungHurufBesar :: T.Text -> Int
+hitungHurufBesar teks = length . filter isUpper $ T.unpack teks
+  where
+    isUpper c = c `elem` ['A'..'Z']
+
+
 main :: IO ()
 main = scotty 3000 $ do
     post "/hitung-kata" $ do
@@ -58,4 +69,18 @@ main = scotty 3000 $ do
         inputData <- jsonData :: ActionM InputText
         let teks = input inputData
         let result = hitungFrekuensi teks
+        json $ object ["result" .= result]
+
+    -- Endpoint untuk menghitung huruf kecil
+    post "/hitung-huruf-kecil" $ do
+        inputData <- jsonData :: ActionM InputText
+        let teks = input inputData
+        let result = hitungHurufKecil teks
+        json $ object ["result" .= result]
+
+    -- Endpoint untuk menghitung huruf besar
+    post "/hitung-huruf-besar" $ do
+        inputData <- jsonData :: ActionM InputText
+        let teks = input inputData
+        let result = hitungHurufBesar teks
         json $ object ["result" .= result]
